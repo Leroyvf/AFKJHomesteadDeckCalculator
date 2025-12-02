@@ -11,7 +11,7 @@ public class HomesteadManager : MonoBehaviour
 {
     public static HomesteadManager Instance;
 
-    public int OptimizationIterationCount = 2000;
+    public int OptimizationIterationCount = 1000;
 
     [SerializeField] GameObject CalculatingText;
     //public List<Card> AvailableCards;
@@ -253,7 +253,7 @@ public class HomesteadManager : MonoBehaviour
         didWeReversal = false;
         reversalMultiplier = 1;
 
-        tempCards = new(cards);
+        tempCards.AddRange(cards);
         debuffTypes.Clear();
 
         thirdlastCardName = null;
