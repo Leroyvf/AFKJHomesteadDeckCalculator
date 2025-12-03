@@ -27,3 +27,21 @@ public class Card : ScriptableObject
         AddedValue = 0;
     }
 }
+
+
+[System.Serializable]
+public class RuntimeCard
+{
+    public Card Data;      // Reference to the ScriptableObject (DO NOT INSTANTIATE)
+    public int AddedValue; // The number that changes
+    public string CachedName;
+    public int CachedID;
+
+    public RuntimeCard(Card source)
+    {
+        Data = source;
+        AddedValue = 0;
+        CachedName = source.name;
+        CachedID = source.name.GetHashCode();
+    }
+}

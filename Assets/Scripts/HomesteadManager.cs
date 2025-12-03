@@ -13,6 +13,67 @@ public class HomesteadManager : MonoBehaviour
 
     public int OptimizationIterationCount = 1000;
 
+
+
+
+    private int currentRuntimeIndex = 0;
+    // Cached Item Flags
+    private bool isEarthAntidote;
+    private bool isMidnightTea;
+    private bool isSweetbeanJuice;
+    private bool isLightproofBrush;
+    private bool isArmoredBodysuit;
+    private bool isCopperStewpot;
+    private bool isFirefangSword;
+    private bool isCarvedBox;
+    private bool isFireproofHelm;
+    private bool isDriedMushroom;
+    private bool isWarmStoneArmor;
+    private bool isHealthyCandiedSkewer;
+    private bool isOddSweet;
+    private bool isFrostAntidote;
+    private bool isWoodIncense;
+    private bool isFirewardRing;
+    private bool isCalmingWarmdust;
+    private bool isSoothingTonic;
+    private bool isWarmdust;
+    private bool isIllusionPotion;
+    private bool isCalmwindIncense;
+    private bool isWarmingIncense;
+    private bool isProtectivePickHammer;
+
+    private void PrecalculateItemFlags()
+    {
+        string currentName = itemAdjuster.GetCurrentItem().Name;
+
+
+        // We use a switch statement here for speed, or just one big string compare block
+        // This runs ONE time, so strings are fine here.
+        isEarthAntidote = (currentName == "Earth Antidote");
+        isMidnightTea = (currentName == "Midnight Tea");
+        isSweetbeanJuice = (currentName == "Sweetbean Juice");
+        isLightproofBrush = (currentName == "Lightproof Brush");
+        isArmoredBodysuit = (currentName == "Armored Bodysuit");
+        isCopperStewpot = (currentName == "Copper Stewpot");
+        isFirefangSword = (currentName == "Firefang Sword");
+        isCarvedBox = (currentName == "Carved Box");
+        isFireproofHelm = (currentName == "Fireproof Helm");
+        isDriedMushroom = (currentName == "Dried Mushroom");
+        isWarmStoneArmor = (currentName == "Warm Stone Armor");
+        isHealthyCandiedSkewer = (currentName == "Healthy Candied Skewer");
+        isOddSweet = (currentName == "Odd Sweet");
+        isFrostAntidote = (currentName == "Frost Antidote");
+        isWoodIncense = (currentName == "Wood Incense");
+        isFirewardRing = (currentName == "Fireward Ring");
+        isCalmingWarmdust = (currentName == "Calming Warmdust");
+        isSoothingTonic = (currentName == "Soothing Tonic");
+        isWarmdust = (currentName == "Warmdust");
+        isIllusionPotion = (currentName == "Illusion Potion");
+        isCalmwindIncense = (currentName == "Calmwind Incense");
+        isWarmingIncense = (currentName == "Warming Incense");
+        isProtectivePickHammer = (currentName == "Protective Pick Hammer");
+    }
+
     [SerializeField] GameObject CalculatingText;
     //public List<Card> AvailableCards;
 
@@ -44,9 +105,11 @@ public class HomesteadManager : MonoBehaviour
     public UI_CardAdjuster cardAjuster;
     private List<int> resultsList = new();
 
-    private List<Card> cards = new();
-    private List<Card> tempCards = new();
+    //private List<Card> cards = new();
+    //private List<Card> tempCards = new();
 
+    private List<RuntimeCard> cards = new();
+    private HashSet<int> seenCardsSet = new HashSet<int>();
     private List<bool> debuffTypes = new();
 
     private int leftColour = 1;
@@ -80,27 +143,26 @@ public class HomesteadManager : MonoBehaviour
     private int ForgeExpertCounter = 0;
     public void AddValueToFutureCards<T>(int amount) where T : Card
     {
-        for (int i = 0; i < tempCards.Count; i++)
+        for (int i = currentRuntimeIndex; i < cards.Count; i++)
         {
-            if (i < tempCards.Count && tempCards[i] is T specialCard)
+            
+            if (cards[i].Data is T)
             {
-                specialCard.AddedValue += amount;
-                
+                cards[i].AddedValue += amount;
             }
-
         }
         ForgeExpertCounter++;
     }
     public void AddValueToFutureArtisanCards(int amount)
     {
-        for (int i = 0; i < tempCards.Count; i++)
+        for (int i = currentRuntimeIndex; i < cards.Count; i++)
         {
-            if (tempCards[i] is ForgeCard specialCard)
+            if (cards[i].Data is ForgeCard specialCard)
             {
                 if (specialCard.isArtisan)
-                    specialCard.AddedValue += amount;
+                    cards[i].AddedValue += amount; // Modify Wrapper
                 else if (specialCard is Soulbind sb)
-                    specialCard.AddedValue += amount;
+                    cards[i].AddedValue += amount; // Modify Wrapper
             }
         }
         HeatUpCounter++;
@@ -116,7 +178,7 @@ public class HomesteadManager : MonoBehaviour
     }
     public void MultiplyHighestColour(int amount)
     {
-        if (isCurrentItemName("Earth Antidote") )
+        if (isEarthAntidote)
         {
             amount *= 2;
         }
@@ -208,7 +270,7 @@ public class HomesteadManager : MonoBehaviour
         SoulbindMultiforge = 0;
 
         sharpenValue = 0;
-        seenCards.Clear();
+        seenCardsSet.Clear();
 
         slowCookCounter = 0;
         slowCooklvltwo = false;
@@ -253,7 +315,7 @@ public class HomesteadManager : MonoBehaviour
         didWeReversal = false;
         reversalMultiplier = 1;
 
-        tempCards.AddRange(cards);
+
         debuffTypes.Clear();
 
         thirdlastCardName = null;
@@ -265,22 +327,32 @@ public class HomesteadManager : MonoBehaviour
         cardCounter = 0;
         hasSweetbeanJuiced = false;
         isTea = false;
-        foreach (var c in tempCards)
+        foreach (var c in cards)
         {
-            c.ResetAddedValue(); 
+            c.Data.ResetAddedValue();
+            c.AddedValue = 0;
         }
 
-        if (isCurrentItemName("Fireward Ring"))
+        if (isFirewardRing)
             leftColour += 15;
+        // --- FAST SHUFFLE (Fisher-Yates) ---
+        int n = cards.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = Random.Range(0, n + 1);
+            RuntimeCard value = cards[k];
+            cards[k] = cards[n];
+            cards[n] = value;
+        }
+        // -----------------------------------
 
-        
-        while (tempCards.Count > 0)
+        for (int cardInteger = 0; cardInteger < cards.Count; cardInteger++)
         {
 
-
-            int cardInteger = Random.Range(0, tempCards.Count);
-            
-            Card card = tempCards[cardInteger];
+            currentRuntimeIndex = cardInteger;
+            RuntimeCard runtimeCard = cards[cardInteger];
+            Card card = runtimeCard.Data;
 
             if (card is Banquet && lastCard != null)
             {
@@ -293,27 +365,27 @@ public class HomesteadManager : MonoBehaviour
             thirdlastCardName = secondlastCardName;
             secondlastCardName = lastCardName;
             lastCardName = currentCardName;       // shift previous
-            currentCardName = card.name;
+            currentCardName = runtimeCard.CachedName;
 
 
-            if (lastCardName != null && card.name == lastCardName )
+            if (lastCardName != null && runtimeCard.CachedName == lastCardName )
             {
                 recipelvl2Success = true;
             }
-            if (lastCardName != null && secondlastCardName != null && card.name == lastCardName && card.name == secondlastCardName )
+            if (lastCardName != null && secondlastCardName != null && runtimeCard.CachedName == lastCardName && runtimeCard.CachedName == secondlastCardName )
             {
                 recipeSuccess = true;
             }
             
-            if(isCurrentItemName("Sweetbean Juice"))
+            if(isSweetbeanJuice)
             {
-                if (thirdlastCardName != null && secondlastCardName != null && lastCardName != null && card.name == lastCardName && card.name == secondlastCardName && card.name == thirdlastCardName)
+                if (thirdlastCardName != null && secondlastCardName != null && lastCardName != null && runtimeCard.CachedName == lastCardName && runtimeCard.CachedName == secondlastCardName && runtimeCard.CachedName == thirdlastCardName)
                     hasSweetbeanJuiced = true;
             }   
 
-            if(isCurrentItemName("Lightproof Brush") && !(card is Reforge) && !(card is Sharpening))
+            if(isLightproofBrush && !(card is Reforge) && !(card is Sharpening))
             {
-                if (!seenCards.Contains(card.name))
+                if (!seenCardsSet.Contains(runtimeCard.CachedID))
                 {
                     if (card is Soulbind s)
                     {
@@ -328,7 +400,7 @@ public class HomesteadManager : MonoBehaviour
                 }
             }
 
-            if (isCurrentItemName("Midnight Tea"))
+            if (isMidnightTea)
             {
                 float chance = Random.Range(0f, 1f);
                 if (chance < 0.25f)
@@ -350,7 +422,7 @@ public class HomesteadManager : MonoBehaviour
                 }
             }
 
-            if (isCurrentItemName("Armored Bodysuit") && cardCounter < 3 && !(card is Reforge) && !(card is Sharpening))
+            if (isArmoredBodysuit && cardCounter < 3 && !(card is Reforge) && !(card is Sharpening))
             {
 
                 CurrentRoundCalc(card);
@@ -358,12 +430,12 @@ public class HomesteadManager : MonoBehaviour
                 cardCounter++;
             }
 
-            if ((isCurrentItemName("Copper Stewpot") || isCurrentItemName("Firefang Sword")) && card is ForgeExpert fe)
+            if ((isCopperStewpot || isFirefangSword) && card is ForgeExpert fe)
             {
                 float chance = Random.Range(0f, 1f);
                 if (chance < 0.3f)
                 {
-                    int value = fe.GetValue(this);
+                    int value = fe.GetValue(this) + runtimeCard.AddedValue;
                     if (fe.isArtisan && artisanCounter > 0)
                     {
 
@@ -416,7 +488,7 @@ public class HomesteadManager : MonoBehaviour
                 }
             }
             
-            if (isCurrentItemName("Protective Pick Hammer") && (card is Pyroburst || card is Forge || card is ForgeExpert))
+            if (isProtectivePickHammer && (card is Pyroburst || card is Forge || card is ForgeExpert))
             {
                 int hammerBuffAmount = 0;
                 if (HeatUpCounter > 0)
@@ -471,7 +543,7 @@ public class HomesteadManager : MonoBehaviour
             }
             if (card is Soulbind sb)
             {
-                int value = sb.GetValue(this) - ForgeExpertCounter/2 * 5;
+                int value = sb.GetValue(this) - ForgeExpertCounter/2 * 5 + runtimeCard.AddedValue;
                     //Debug.Log("Soulbinding " + SoulbindMultiforge + "  value: " + value);
                 for (int i = 0; i < SoulbindMultiforge; i++)
                 {
@@ -490,11 +562,11 @@ public class HomesteadManager : MonoBehaviour
             CurrentRoundCalc(card);
             card.OnActivation(this);
             
-            if (isCurrentItemName("Carved Box") && firstForgeAmount >= 1)
+            if (isCarvedBox && firstForgeAmount >= 1)
             {
                 hasFirstForgeCardPassed = true;
             }
-            else if (isCurrentItemName("Fireproof Helm") && firstForgeAmount >= 3)
+            else if (isFireproofHelm && firstForgeAmount >= 3)
             {
 
                 hasFirstForgeCardPassed = true;
@@ -503,20 +575,19 @@ public class HomesteadManager : MonoBehaviour
             //Sharpen
             if (card is ForgeCard)
             {
-                seenCards.Add(card.name);
+                seenCardsSet.Add(runtimeCard.CachedID);
             }
 
-            tempCards.RemoveAt(cardInteger);
             if(overchargeAmount > 0)
                 overchargeAmount--;
         }
         
-        if (isCurrentItemName("Dried Mushroom") && howManyHeatControls >= 7)
+        if (isDriedMushroom && howManyHeatControls >= 7)
         {
             leftColour += 3;
             rightColour += 3;
         }
-        if(isCurrentItemName("Warm Stone Armor") && howManyAritsans >= 6)
+        if(isWarmStoneArmor && howManyAritsans >= 6)
         {
             leftColour += 3;
             rightColour += 3;
@@ -525,17 +596,17 @@ public class HomesteadManager : MonoBehaviour
         FuseCheck();
         BakeCheck();
         ByTheRecipeCheck();
-        if(isCurrentItemName("Healthy Candied Skewer"))
+        if(isHealthyCandiedSkewer)
         {
             if (leftColour < rightColour)
                 rightColour = leftColour;
             else
                 leftColour = rightColour;
         }
-        if (isCurrentItemName("Odd Sweet"))
+        if (isOddSweet)
             OddSweet();
 
-        if(isCurrentItemName("Frost Antidote"))
+        if(isFrostAntidote)
         {
             if (leftColour < rightColour)
             {
@@ -553,7 +624,7 @@ public class HomesteadManager : MonoBehaviour
             }
         }
 
-        if (isCurrentItemName("Wood Incense"))
+        if (isWoodIncense)
         {
             if (leftColour < rightColour)
             {
@@ -688,7 +759,7 @@ public class HomesteadManager : MonoBehaviour
             leftColour += ReforgeBonus;
             rightColour += ReforgeBonus;   
         }
-        if (isCurrentItemName("Armored Bodysuit") && cardCounter < 3)
+        if (isArmoredBodysuit && cardCounter < 3)
         {
             leftColour += ReforgeBonus;
             rightColour += ReforgeBonus;
@@ -745,7 +816,7 @@ public class HomesteadManager : MonoBehaviour
         {
             if (slowCooklvltwo)
             {
-                if (isCurrentItemName("Midnight Tea"))
+                if (isMidnightTea)
                 {
                     float chance = Random.Range(0f, 1f);
                     if (chance < 0.25f)
@@ -901,11 +972,12 @@ public class HomesteadManager : MonoBehaviour
     
     public void CurrentRoundCalc(Card c)
     {
+        int addedvaluestored = cards[currentRuntimeIndex].AddedValue;
         //Reforge
         if (c is ForgeCard reforgeCheck && reforgeCheck.isArtisan)
             ReforgeTrigger();
         //Sharpen
-        if (c is ForgeCard && !seenCards.Contains(c.name))
+        if (c is ForgeCard && !seenCardsSet.Contains(cards[currentRuntimeIndex].CachedID))
         {
             float chance = Random.Range(0f, 1f);
             if (chance < 0.5f)
@@ -915,26 +987,26 @@ public class HomesteadManager : MonoBehaviour
         }
         if (c is ForgeCard fc && (fc.isArtisan) && artisanCounter > 0)
         {
-            int value = fc.GetValue(this);
+            int value = fc.GetValue(this) + addedvaluestored;
             leftColour += value;
             rightColour += value;
             artisanCounter--;
         }
-        else if(c is Forge f && isCurrentItemName("Carved Box") && !hasFirstForgeCardPassed)
+        else if(c is Forge f && isCarvedBox && !hasFirstForgeCardPassed)
         {
-            int value = f.GetValue(this);
+            int value = f.GetValue(this) + addedvaluestored;
             leftColour += value;
             rightColour += value;
         }
-        else if (c is Forge f2 && isCurrentItemName("Fireproof Helm") && !hasFirstForgeCardPassed)
+        else if (c is Forge f2 && isFireproofHelm && !hasFirstForgeCardPassed)
         {
-            int value = f2.GetValue(this);
+            int value = f2.GetValue(this) + addedvaluestored;
             leftColour += value;
             rightColour += value;
         }
         else if (c is Soulbind sb)
         {
-            int value = sb.GetValue(this);
+            int value = sb.GetValue(this) + addedvaluestored;
             if (artisanCounter > 0)
             {
                 leftColour += value;
@@ -952,11 +1024,11 @@ public class HomesteadManager : MonoBehaviour
             {
                 int negativevalue = g.negativeValue;
                 int value = g.GetValue(this);
-                if (isCurrentItemName("Earth Antidote"))
+                if (isEarthAntidote)
                 {
                     negativevalue *= 2;
                 }
-                if (isCurrentItemName("Warming Incense"))
+                if (isWarmingIncense)
                 {
                     if (leftColour > rightColour)
                     {
@@ -1031,7 +1103,7 @@ public class HomesteadManager : MonoBehaviour
             else if (alc is Ingredients ing)
             {   
                 int amount = ing.GetValue(this);
-                if (isCurrentItemName("Calmwind Incense"))
+                if (isCalmwindIncense)
                 {
                     
                     IncreaseHighestColour(amount);
@@ -1069,7 +1141,7 @@ public class HomesteadManager : MonoBehaviour
         }
         else
         {
-            int value = c.GetValue(this);
+            int value = c.GetValue(this) + addedvaluestored;
             IncreaseRandomColour(value);
         }
         if (!(c is Cut))
@@ -1134,7 +1206,7 @@ public class HomesteadManager : MonoBehaviour
 
     private void ReduceHighestColour(int amount)
     {
-        if (isCurrentItemName("Earth Antidote"))
+        if (isEarthAntidote)
         {
             amount *= 2;
         }
@@ -1230,7 +1302,7 @@ public class HomesteadManager : MonoBehaviour
     private void IncreaseHighestColour(int amount)
     {
         //Exception to overload is at overload section of calculation
-        if (isCurrentItemName("Earth Antidote"))
+        if (isEarthAntidote)
         {
             amount *= 2;
         }
@@ -1246,7 +1318,7 @@ public class HomesteadManager : MonoBehaviour
 
     private void ReduceBothColours(int amount)
     {
-        if (isCurrentItemName("Earth Antidote"))
+        if (isEarthAntidote)
         {
             amount *= 2;
         }
@@ -1272,14 +1344,14 @@ public class HomesteadManager : MonoBehaviour
 
     private void AlchemyCounterCheck()
     {
-        if (isCurrentItemName("Calming Warmdust") || isCurrentItemName("Soothing Tonic"))
+        if (isCalmingWarmdust || isSoothingTonic)
         {
             if (leftColour > rightColour)
                 leftColour += 3;
             else
                 rightColour += 3;
         }
-        else if (isCurrentItemName("Warmdust") || isCurrentItemName("Illusion Potion"))
+        else if (isWarmdust || isIllusionPotion)
         {
             if (leftColour < rightColour)
                 leftColour += 1;
@@ -1301,7 +1373,7 @@ public class HomesteadManager : MonoBehaviour
     
     public void CalculateDeck()
     {
-        
+        PrecalculateItemFlags();
 
         resultsList.Clear();
         cards.Clear();
@@ -1394,7 +1466,7 @@ public class HomesteadManager : MonoBehaviour
 
     private void CreateDeck()
     {
-
+        
         switch (itemAdjuster.Category)
         {
             case 0:
@@ -1402,8 +1474,7 @@ public class HomesteadManager : MonoBehaviour
                 {
                     if (cardAjuster.IsCardActive(0, ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()))
                     {
-                        Card newCard = ScriptableObject.Instantiate(KitchenCards[ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()]);
-                        cards.Add(newCard);
+                        cards.Add(new RuntimeCard(KitchenCards[ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()]));
                     }
                 }
                 break;
@@ -1412,8 +1483,7 @@ public class HomesteadManager : MonoBehaviour
                 {
                     if (cardAjuster.IsCardActive(1, ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()))
                     {
-                        Card newCard = ScriptableObject.Instantiate(ForgeCards[ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()]);
-                        cards.Add(newCard);
+                        cards.Add(new RuntimeCard(ForgeCards[ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()]));
                     }
                 }
                 break;
@@ -1422,16 +1492,14 @@ public class HomesteadManager : MonoBehaviour
                 {
                     if (cardAjuster.IsCardActive(2, ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()))
                     {
-                        Card newCard = ScriptableObject.Instantiate(AlchemyCards[ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()]);
-                        cards.Add(newCard);
+                        cards.Add(new RuntimeCard(AlchemyCards[ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()]));
                     }
                 }
                 break;
             case 3:
                 for (int i = 0; i < ActivePanel.cardSelectors.Count; i++)
                 {
-                    Card newCard = ScriptableObject.Instantiate(EventCards[ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()]);
-                    cards.Add(newCard);
+                    cards.Add(new RuntimeCard(EventCards[ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()]));
                 }
                 break;
         }
@@ -1476,7 +1544,7 @@ public class HomesteadManager : MonoBehaviour
         {
         };
 
-        
+        PrecalculateItemFlags();
 
         switch (itemAdjuster.Category)
         {
@@ -1581,7 +1649,7 @@ public class HomesteadManager : MonoBehaviour
         CalculatingText.SetActive(true);
 
         yield return null;
-
+        PrecalculateItemFlags();
         //Create a list with all valid cards
         List<Card> allAvailableCards = new();
 
@@ -1686,7 +1754,7 @@ public class HomesteadManager : MonoBehaviour
         CalculatingText.SetActive(true);
 
         yield return null;
-
+        PrecalculateItemFlags();
         //Create a list with all valid cards
         List<Card> allAvailableCards = new();
 
@@ -1730,9 +1798,11 @@ public class HomesteadManager : MonoBehaviour
         List<List<Card>> permutations = GetUniqueCombinations(cardLimits, itemAdjuster.GetCurrentItem().DeckSize);
 
 
-        List<double> permutationResults = new List<double>();
+        //List<double> permutationResults = new List<double>();
         Item currentItem = itemAdjuster.GetCurrentItem();
         double MaxValue = 0;
+        int MaxIndex = 0;
+
 
         for (int i = 0; i < permutations.Count; i++)
         {
@@ -1740,14 +1810,6 @@ public class HomesteadManager : MonoBehaviour
             cards.Clear();
 
             CreateDeckFromList(permutations[i]);
-
-
-            for (int j = 0; j < OptimizationIterationCount; j++)
-            {
-                resultsList.Add(CalculateResults());
-            }
-
-
 
             int zeroStarCutoff = 0;
             int zeroCounter = 0;
@@ -1764,17 +1826,18 @@ public class HomesteadManager : MonoBehaviour
             int fourStarCutoff = currentItem.FourStarScore;
             int fourCounter = 0;
 
-            for (int k = 0; k < resultsList.Count; k++)
+            for (int j = 0; j < OptimizationIterationCount; j++)
             {
-                if (resultsList[k] < fourStarCutoff)
+                int res = CalculateResults();
+                if (res < fourStarCutoff)
                 {
-                    if (resultsList[k] < threeStarCutoff)
+                    if (res < threeStarCutoff)
                     {
-                        if (resultsList[k] < twoStarCutoff)
+                        if (res < twoStarCutoff)
                         {
-                            if (resultsList[k] < oneStarCutoff)
+                            if (res < oneStarCutoff)
                             {
-                                if (resultsList[k] < zeroStarCutoff)
+                                if (res < zeroStarCutoff)
                                 {
 
                                 }
@@ -1792,8 +1855,9 @@ public class HomesteadManager : MonoBehaviour
                 }
                 else
                     fourCounter++;
-            }
 
+                
+            }
 
             float zeroPercentage = Mathf.Round(zeroCounter / (float)OptimizationIterationCount * 1000) / 10f;
             float onePercentage = Mathf.Round(oneCounter / (float)OptimizationIterationCount * 1000) / 10f;
@@ -1803,20 +1867,19 @@ public class HomesteadManager : MonoBehaviour
 
 
             double result = (zeroPercentage * currentItem.ZeroStarWP + onePercentage * currentItem.OneStarWP + twoPercentage * currentItem.TwoStarWP + threePercentage * currentItem.ThreeStarWP + fourPercentage * currentItem.FourStarWP) / (zeroPercentage + onePercentage + twoPercentage + threePercentage + fourPercentage);
-            permutationResults.Add(result);
-            if(result > MaxValue)
+            //permutationResults.Add(result);
+            if (result > MaxValue)
             {
                 MaxValue = result;
+                MaxIndex = i;
             }
-
-            if (i % 20 == 0)
-                yield return null;
+            
         }
 
-        double maxValue = permutationResults.Max();
-        int maxIndex = permutationResults.IndexOf(maxValue);
+        //double maxValue = permutationResults.Max();
+        //int maxIndex = permutationResults.IndexOf(MaxValue);
 
-        if (permutationResults == null || permutationResults.Count == 0)
+        if (MaxValue == 0)
         {
             Debug.LogWarning("Not enough cards for this craft at the selected Level.");
             yield break; // or handle fallback logic
@@ -1832,20 +1895,21 @@ public class HomesteadManager : MonoBehaviour
             switch (itemAdjuster.Category)
             {
                 case 0: //Kitchen
-                    ActivePanel.cardSelectors[i].SetSpecificDropdown(itemAdjuster.Category, KitchenCards.IndexOf(permutations[maxIndex][i]));
+                    ActivePanel.cardSelectors[i].SetSpecificDropdown(itemAdjuster.Category, KitchenCards.IndexOf(permutations[MaxIndex][i]));
                     break;
                 case 1: //Forge
-                    ActivePanel.cardSelectors[i].SetSpecificDropdown(itemAdjuster.Category, ForgeCards.IndexOf(permutations[maxIndex][i]));
+                    ActivePanel.cardSelectors[i].SetSpecificDropdown(itemAdjuster.Category, ForgeCards.IndexOf(permutations[MaxIndex][i]));
                     break;
                 case 2: //Alchemy
-                    ActivePanel.cardSelectors[i].SetSpecificDropdown(itemAdjuster.Category, AlchemyCards.IndexOf(permutations[maxIndex][i]));
+                    ActivePanel.cardSelectors[i].SetSpecificDropdown(itemAdjuster.Category, AlchemyCards.IndexOf(permutations[MaxIndex][i]));
                     break;
                 case 3: //Events
-                    ActivePanel.cardSelectors[i].SetSpecificDropdown(itemAdjuster.Category, EventCards.IndexOf(permutations[maxIndex][i]));
+                    ActivePanel.cardSelectors[i].SetSpecificDropdown(itemAdjuster.Category, EventCards.IndexOf(permutations[MaxIndex][i]));
                     break;
             }
         }
-
+        
+        Debug.Log(MaxValue);
         CalculateDeck();
     }
 
@@ -1853,7 +1917,7 @@ public class HomesteadManager : MonoBehaviour
     {
         List<List<Card>> results = new List<List<Card>>();
         var cardNames = new List<Card>(limits.Keys); // fixed order
-
+        PrecalculateItemFlags();
         GenerateCombinations(new List<Card>(), limits, cardNames, 0, length, results);
         return results;
     }
@@ -1933,10 +1997,10 @@ public class HomesteadManager : MonoBehaviour
     }
     private void CreateDeckFromList(List<Card> cardlist)
     {
+        cards.Clear();
         for (int i = 0; i < cardlist.Count; i++)
         {
-            Card newCard = ScriptableObject.Instantiate(cardlist[i]);
-            cards.Add(newCard);
+            cards.Add(new RuntimeCard(cardlist[i]));
         }
     }
 
@@ -1950,6 +2014,7 @@ public class HomesteadManager : MonoBehaviour
         CalculatingText.SetActive(true);
 
         yield return null;
+        PrecalculateItemFlags();
         //Create a list with all valid cards
         List<Card> allAvailableCards = new();
 
@@ -2118,7 +2183,7 @@ public class HomesteadManager : MonoBehaviour
         CalculatingText.SetActive(true);
 
         yield return null;
-
+        PrecalculateItemFlags();
         //Create a list with all valid cards
         List<Card> allAvailableCards = new();
 
@@ -2289,7 +2354,7 @@ public class HomesteadManager : MonoBehaviour
         CalculatingText.SetActive(true);
 
         yield return null;
-
+        PrecalculateItemFlags();
         //Create a list with all valid cards
         List<Card> allAvailableCards = new();
 
@@ -2457,7 +2522,7 @@ public class HomesteadManager : MonoBehaviour
     private IEnumerator CalculateFourStarRoutine()
     {
         CalculatingText.SetActive(true);
-
+        PrecalculateItemFlags();
         yield return null;
 
         //Create a list with all valid cards
