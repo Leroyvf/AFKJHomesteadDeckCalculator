@@ -1973,8 +1973,6 @@ public class HomesteadManager : MonoBehaviour
                     break;
             }
         }
-
-        Debug.Log(MaxValue);
         CalculateDeck();
     }
 
