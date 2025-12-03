@@ -988,7 +988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 509b6dc94560b61439aeed295464e5f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OptimizationIterationCount: 1000
+  OptimizationIterationCount: 750
   CalculatingText: {fileID: 1225079995}
   KitchenCards:
   - {fileID: 11400000, guid: 2858a26b3b01fd947a950a4301342591, type: 2}

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -1796,12 +1797,18 @@ public class HomesteadManager : MonoBehaviour
         }
 
         List<List<Card>> permutations = GetUniqueCombinations(cardLimits, itemAdjuster.GetCurrentItem().DeckSize);
-
+        List<(int index, double score)> candidates = new List<(int, double)>();
 
         //List<double> permutationResults = new List<double>();
         Item currentItem = itemAdjuster.GetCurrentItem();
         double MaxValue = 0;
         int MaxIndex = 0;
+
+        int zeroStarCutoff = 0;
+        int oneStarCutoff = currentItem.OneStarScore;
+        int twoStarCutoff = currentItem.TwoStarScore;
+        int threeStarCutoff = currentItem.ThreeStarScore;
+        int fourStarCutoff = currentItem.FourStarScore;
 
 
         for (int i = 0; i < permutations.Count; i++)
@@ -1809,22 +1816,15 @@ public class HomesteadManager : MonoBehaviour
             resultsList.Clear();
             cards.Clear();
 
+
+
             CreateDeckFromList(permutations[i]);
-
-            int zeroStarCutoff = 0;
             int zeroCounter = 0;
-
-            int oneStarCutoff = currentItem.OneStarScore;
             int oneCounter = 0;
-
-            int twoStarCutoff = currentItem.TwoStarScore;
             int twoCounter = 0;
-
-            int threeStarCutoff = currentItem.ThreeStarScore;
             int threeCounter = 0;
-
-            int fourStarCutoff = currentItem.FourStarScore;
             int fourCounter = 0;
+
 
             for (int j = 0; j < OptimizationIterationCount; j++)
             {
@@ -1856,7 +1856,7 @@ public class HomesteadManager : MonoBehaviour
                 else
                     fourCounter++;
 
-                
+
             }
 
             float zeroPercentage = Mathf.Round(zeroCounter / (float)OptimizationIterationCount * 1000) / 10f;
@@ -1867,19 +1867,21 @@ public class HomesteadManager : MonoBehaviour
 
 
             double result = (zeroPercentage * currentItem.ZeroStarWP + onePercentage * currentItem.OneStarWP + twoPercentage * currentItem.TwoStarWP + threePercentage * currentItem.ThreeStarWP + fourPercentage * currentItem.FourStarWP) / (zeroPercentage + onePercentage + twoPercentage + threePercentage + fourPercentage);
-            //permutationResults.Add(result);
-            if (result > MaxValue)
-            {
-                MaxValue = result;
-                MaxIndex = i;
-            }
-            
+
+            candidates.Add((i, result));
+
+
         }
+
+
+
+
+
 
         //double maxValue = permutationResults.Max();
         //int maxIndex = permutationResults.IndexOf(MaxValue);
 
-        if (MaxValue == 0)
+        if (candidates.Count == 0)
         {
             Debug.LogWarning("Not enough cards for this craft at the selected Level.");
             yield break; // or handle fallback logic
@@ -1888,7 +1890,70 @@ public class HomesteadManager : MonoBehaviour
         //double maxValue = permutationResults.Max();
         //int maxIndex = permutationResults.IndexOf(maxValue);
 
+
+
+        // Sort Descending by Score
+        candidates.Sort((a, b) => b.score.CompareTo(a.score));
+
+        int finalistsCount = Mathf.Min(10, candidates.Count);
+
         
+
+        for (int k = 0; k < finalistsCount; k++)
+        {
+            int permIndex = candidates[k].index;
+            CreateDeckFromList(permutations[permIndex]);
+
+            int zeroCounter = 0;
+            int oneCounter = 0;
+            int twoCounter = 0;
+            int threeCounter = 0;
+            int fourCounter = 0;
+
+            for (int j = 0; j < iterationSlider.value; j++)
+            {
+                int res = CalculateResults();
+                if (res < fourStarCutoff)
+                {
+                    if (res < threeStarCutoff)
+                    {
+                        if (res < twoStarCutoff)
+                        {
+                            if (res < oneStarCutoff)
+                            {
+                                if (res < zeroStarCutoff)
+                                {
+
+                                }
+                                else
+                                    zeroCounter++;
+                            }
+                            else
+                                oneCounter++;
+                        }
+                        else
+                            twoCounter++;
+                    }
+                    else
+                        threeCounter++;
+                }
+                else
+                    fourCounter++;
+            }
+            float zeroPercentage = Mathf.Round(zeroCounter / (float)iterationSlider.value * 1000) / 10f;
+            float onePercentage = Mathf.Round(oneCounter / (float)iterationSlider.value * 1000) / 10f;
+            float twoPercentage = Mathf.Round(twoCounter / (float)iterationSlider.value * 1000) / 10f;
+            float threePercentage = Mathf.Round(threeCounter / (float)iterationSlider.value * 1000) / 10f;
+            float fourPercentage = Mathf.Round(fourCounter / (float)iterationSlider.value * 1000) / 10f;
+
+            double result = (zeroPercentage * currentItem.ZeroStarWP + onePercentage * currentItem.OneStarWP + twoPercentage * currentItem.TwoStarWP + threePercentage * currentItem.ThreeStarWP + fourPercentage * currentItem.FourStarWP) / (zeroPercentage + onePercentage + twoPercentage + threePercentage + fourPercentage);
+            if (result > MaxValue)
+            {
+                MaxValue = result;
+                MaxIndex = permIndex;
+            }
+
+        }
 
         for (int i = 0; i < ActivePanel.cardSelectors.Count; i++)
         {
@@ -1908,7 +1973,7 @@ public class HomesteadManager : MonoBehaviour
                     break;
             }
         }
-        
+
         Debug.Log(MaxValue);
         CalculateDeck();
     }
