@@ -39,6 +39,7 @@ public class UI_ItemAdjuster : MonoBehaviour
         twoInput.text = GetCurrentItem().TwoStarScore.ToString();
         threeInput.text = GetCurrentItem().ThreeStarScore.ToString();
         fourInput.text = GetCurrentItem().FourStarScore.ToString();
+        DisplayCurrentDropdown();
         /*
         if (GetCurrentItem().Name == "Copper Stewpot")
         {
@@ -136,23 +137,41 @@ public class UI_ItemAdjuster : MonoBehaviour
                 break;
         }
         HomesteadManager.Instance.UpdateCardSelectors();
-        UpdateItemSelection();
-        
-        
+        //UpdateItemSelection();
+
+
     }
 
     public void SetSpecificItem(int cat, int item)
     {
         CategoryDropdown.value = cat;
         GetCurrentDropdown().value = item;
-        DisplayCurrentDropdown();        
+        DisplayCurrentDropdown();
     }
-    public int Category => CategoryDropdown.value;
+    public int Category
+    {
+        get
+        {
+            int returnValue = CategoryDropdown.value;
+            if (returnValue == 3) //Check if event
+            {
+                switch (GetCurrentItemIndex())
+                {
+                    case 0: returnValue = 0; break; //Springtime Green
+                    case 1: returnValue = 1; break; // Festive Figurine
+                    case 2: returnValue = 2; break; //Stellar Potion
+                    case 3: returnValue = 0; break; //Lunar Pastry Box
+                }
+
+            }
+            return returnValue;
+        }
+    }
 
     public void OnCategoryDropDown()
     {
         HomesteadManager.Instance.UpdateCardSelectors();
-        DisplayCurrentDropdown();
+        UpdateItemSelection();
     }
 
 }

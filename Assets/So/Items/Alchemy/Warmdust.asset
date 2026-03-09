@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Warmdust
   m_EditorClassIdentifier: 
   Name: Warmdust
-  OneStarScore: 960
-  TwoStarScore: 1170
-  ThreeStarScore: 1760
-  FourStarScore: 2040
+  OneStarScore: 920
+  TwoStarScore: 1230
+  ThreeStarScore: 1600
+  FourStarScore: 2070
   DeckSize: 7
-  ZeroStarWP: 515
-  OneStarWP: 644
-  TwoStarWP: 708
-  ThreeStarWP: 805
-  FourStarWP: 998
+  ZeroStarWP: 258
+  OneStarWP: 322
+  TwoStarWP: 354
+  ThreeStarWP: 403
+  FourStarWP: 499

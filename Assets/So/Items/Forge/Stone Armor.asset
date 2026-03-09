@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Stone Armor
   m_EditorClassIdentifier: 
   Name: Stone Armor
-  OneStarScore: 2210
-  TwoStarScore: 2600
-  ThreeStarScore: 2920
-  FourStarScore: 3770
+  OneStarScore: 1100
+  TwoStarScore: 1915
+  ThreeStarScore: 2670
+  FourStarScore: 3510
   DeckSize: 7
-  ZeroStarWP: 515
-  OneStarWP: 644
-  TwoStarWP: 708
-  ThreeStarWP: 805
-  FourStarWP: 998
+  ZeroStarWP: 258
+  OneStarWP: 322
+  TwoStarWP: 354
+  ThreeStarWP: 403
+  FourStarWP: 499

@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Copper Stewpot
   m_EditorClassIdentifier: 
   Name: Copper Stewpot
-  OneStarScore: 566
-  TwoStarScore: 675
-  ThreeStarScore: 797
-  FourStarScore: 1040
+  OneStarScore: 240
+  TwoStarScore: 425
+  ThreeStarScore: 666
+  FourStarScore: 1050
   DeckSize: 5
-  ZeroStarWP: 280
-  OneStarWP: 350
-  TwoStarWP: 385
-  ThreeStarWP: 438
-  FourStarWP: 543
+  ZeroStarWP: 140
+  OneStarWP: 175
+  TwoStarWP: 193
+  ThreeStarWP: 219
+  FourStarWP: 271

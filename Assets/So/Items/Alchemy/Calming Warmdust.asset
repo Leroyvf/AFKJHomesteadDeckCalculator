@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Calming Warmdust
   m_EditorClassIdentifier: 
   Name: Calming Warmdust
-  OneStarScore: 1290
-  TwoStarScore: 1586
-  ThreeStarScore: 2520
+  OneStarScore: 1080
+  TwoStarScore: 1800
+  ThreeStarScore: 2180
   FourStarScore: 2860
   DeckSize: 7
-  ZeroStarWP: 515
-  OneStarWP: 644
-  TwoStarWP: 708
-  ThreeStarWP: 805
-  FourStarWP: 998
+  ZeroStarWP: 258
+  OneStarWP: 322
+  TwoStarWP: 354
+  ThreeStarWP: 403
+  FourStarWP: 499

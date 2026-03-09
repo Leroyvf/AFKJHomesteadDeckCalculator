@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Shroom Stir-Fry
   m_EditorClassIdentifier: 
   Name: Shroom Stir-Fry
-  OneStarScore: 2160
-  TwoStarScore: 2450
-  ThreeStarScore: 2810
-  FourStarScore: 3520
+  OneStarScore: 715
+  TwoStarScore: 1400
+  ThreeStarScore: 2150
+  FourStarScore: 3570
   DeckSize: 6
-  ZeroStarWP: 515
-  OneStarWP: 644
-  TwoStarWP: 708
-  ThreeStarWP: 805
-  FourStarWP: 998
+  ZeroStarWP: 258
+  OneStarWP: 322
+  TwoStarWP: 354
+  ThreeStarWP: 403
+  FourStarWP: 499

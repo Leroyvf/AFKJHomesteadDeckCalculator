@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Warm Stone Armor
   m_EditorClassIdentifier: 
   Name: Warm Stone Armor
-  OneStarScore: 729
+  OneStarScore: 1000
   TwoStarScore: 3860
-  ThreeStarScore: 7920
-  FourStarScore: 14800
+  ThreeStarScore: 7000
+  FourStarScore: 11000
   DeckSize: 7
   ZeroStarWP: 339
   OneStarWP: 424

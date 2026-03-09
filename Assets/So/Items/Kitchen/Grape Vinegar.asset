@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Grape Vinegar
   m_EditorClassIdentifier: 
   Name: Grape Vinegar
-  OneStarScore: 1070
-  TwoStarScore: 1270
-  ThreeStarScore: 1420
+  OneStarScore: 320
+  TwoStarScore: 610
+  ThreeStarScore: 1090
   FourStarScore: 1740
   DeckSize: 6
-  ZeroStarWP: 280
-  OneStarWP: 350
-  TwoStarWP: 385
-  ThreeStarWP: 438
-  FourStarWP: 543
+  ZeroStarWP: 140
+  OneStarWP: 175
+  TwoStarWP: 193
+  ThreeStarWP: 219
+  FourStarWP: 271

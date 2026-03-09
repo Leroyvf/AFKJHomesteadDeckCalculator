@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Copper Mask
   m_EditorClassIdentifier: 
   Name: Copper Mask
-  OneStarScore: 19
-  TwoStarScore: 23
+  OneStarScore: 15
+  TwoStarScore: 30
   ThreeStarScore: 10000000
   FourStarScore: 10000000
   DeckSize: 4

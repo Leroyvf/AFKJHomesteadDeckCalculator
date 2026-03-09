@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Fireproof Helm
   m_EditorClassIdentifier: 
   Name: Fireproof Helm
-  OneStarScore: 8060
-  TwoStarScore: 25100
+  OneStarScore: 6600
+  TwoStarScore: 20200
   ThreeStarScore: 40400
-  FourStarScore: 61700
+  FourStarScore: 51300
   DeckSize: 8
   ZeroStarWP: 560
   OneStarWP: 700

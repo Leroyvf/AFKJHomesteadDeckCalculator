@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Soothing Tonic
   OneStarScore: 3290
-  TwoStarScore: 3650
-  ThreeStarScore: 4580
-  FourStarScore: 5240
+  TwoStarScore: 4300
+  ThreeStarScore: 5625
+  FourStarScore: 7000
   DeckSize: 8
   ZeroStarWP: 439
-  OneStarWP: 5049
+  OneStarWP: 549
   TwoStarWP: 604
   ThreeStarWP: 687
   FourStarWP: 851

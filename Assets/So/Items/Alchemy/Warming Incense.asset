@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Warming Incense
   m_EditorClassIdentifier: 
   Name: Warming Incense
-  OneStarScore: 1105
-  TwoStarScore: 1220
-  ThreeStarScore: 1560
-  FourStarScore: 1870
+  OneStarScore: 1025
+  TwoStarScore: 1400
+  ThreeStarScore: 1650
+  FourStarScore: 2180
   DeckSize: 6
   ZeroStarWP: 339
   OneStarWP: 424

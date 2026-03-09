@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Fireward Ring
   m_EditorClassIdentifier: 
   Name: Fireward Ring
-  OneStarScore: 6110
-  TwoStarScore: 6630
-  ThreeStarScore: 7160
-  FourStarScore: 8200
+  OneStarScore: 6200
+  TwoStarScore: 8000
+  ThreeStarScore: 10200
+  FourStarScore: 12120
   DeckSize: 9
   ZeroStarWP: 560
   OneStarWP: 700

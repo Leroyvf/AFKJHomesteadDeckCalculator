@@ -14,7 +14,7 @@ public class HomesteadManager : MonoBehaviour
 
     public int OptimizationIterationCount = 1000;
 
-
+    private float AuroraBlessingAmount = 0;
 
 
     private int currentRuntimeIndex = 0;
@@ -42,6 +42,8 @@ public class HomesteadManager : MonoBehaviour
     private bool isCalmwindIncense;
     private bool isWarmingIncense;
     private bool isProtectivePickHammer;
+    private bool isFestivalFigurine;
+    private bool isStellarPotion;
 
     private void PrecalculateItemFlags()
     {
@@ -73,6 +75,8 @@ public class HomesteadManager : MonoBehaviour
         isCalmwindIncense = (currentName == "Calmwind Incense");
         isWarmingIncense = (currentName == "Warming Incense");
         isProtectivePickHammer = (currentName == "Protective Pick Hammer");
+        isFestivalFigurine = (currentName == "Festive Figurine");
+        isStellarPotion = (currentName == "Stellar Potion");
     }
 
     [SerializeField] GameObject CalculatingText;
@@ -105,6 +109,9 @@ public class HomesteadManager : MonoBehaviour
     public UI_ItemAdjuster itemAdjuster;
     public UI_CardAdjuster cardAjuster;
     private List<int> resultsList = new();
+
+    public Toggle AuroraBlessing;
+    public Toggle ProductionBooster;
 
     //private List<Card> cards = new();
     //private List<Card> tempCards = new();
@@ -179,6 +186,11 @@ public class HomesteadManager : MonoBehaviour
     }
     public void MultiplyHighestColour(int amount)
     {
+        if (isStellarPotion)
+        {
+            MultiplyRandomColour(amount);
+            return;
+        }
         if (isEarthAntidote)
         {
             amount *= 2;
@@ -202,6 +214,11 @@ public class HomesteadManager : MonoBehaviour
     }
     public void MultiplyLowestColour(int amount)
     {
+        if (isStellarPotion)
+        {
+            MultiplyRandomColour(amount);
+            return;
+        }
         if (overchargeAmount > 0)
         {
             amount *= overchargeMultiplier;
@@ -355,6 +372,13 @@ public class HomesteadManager : MonoBehaviour
             RuntimeCard runtimeCard = cards[cardInteger];
             Card card = runtimeCard.Data;
 
+            //Event Card check
+            if (isFestivalFigurine && card is ForgeCard foCa)
+            {
+                foCa.isArtisan = true;
+            }
+
+
             if (card is Banquet && lastCard != null)
             {
                 card = lastCard;
@@ -366,21 +390,22 @@ public class HomesteadManager : MonoBehaviour
             thirdlastCardName = secondlastCardName;
             secondlastCardName = lastCardName;
             lastCardName = currentCardName;       // shift previous
-            currentCardName = runtimeCard.CachedName;
+            //currentCardName = runtimeCard.CachedName;
+            currentCardName = card.name;
 
 
-            if (lastCardName != null && runtimeCard.CachedName == lastCardName )
+            if (lastCardName != null && currentCardName == lastCardName )
             {
                 recipelvl2Success = true;
             }
-            if (lastCardName != null && secondlastCardName != null && runtimeCard.CachedName == lastCardName && runtimeCard.CachedName == secondlastCardName )
+            if (lastCardName != null && secondlastCardName != null && currentCardName == lastCardName && currentCardName == secondlastCardName )
             {
                 recipeSuccess = true;
             }
             
             if(isSweetbeanJuice)
             {
-                if (thirdlastCardName != null && secondlastCardName != null && lastCardName != null && runtimeCard.CachedName == lastCardName && runtimeCard.CachedName == secondlastCardName && runtimeCard.CachedName == thirdlastCardName)
+                if (thirdlastCardName != null && secondlastCardName != null && lastCardName != null && currentCardName == lastCardName && currentCardName == secondlastCardName && currentCardName == thirdlastCardName)
                     hasSweetbeanJuiced = true;
             }   
 
@@ -470,22 +495,16 @@ public class HomesteadManager : MonoBehaviour
                 if (pyroBurstBuffAmount >= P.buffrequirement)
                 {
                    int value = P.GetValue(this);
-                    CurrentRoundCalc(P);
-                    if (itemAdjuster.buggedToggle.isOn)
+                    for (int i = 0; i < P.triggeramount; i++)
                     {
-                        card.StartValue = value;
+                        CurrentRoundCalc(P);
+                        if (itemAdjuster.buggedToggle.isOn)
+                        {
+                            card.StartValue = value;
+                        }
+                        P.OnActivation(this);
                     }
-                    P.OnActivation(this);
-
-                    //second bugged retrigger
-                    CurrentRoundCalc(P);
-                    if (itemAdjuster.buggedToggle.isOn)
-                    {
-                        card.StartValue = value;
-                    }
-                    P.OnActivation(this);
-
-                    //SoulbindMultiforge += 2;
+                    
                 }
             }
             
@@ -528,7 +547,8 @@ public class HomesteadManager : MonoBehaviour
                 {
                     artisanCounter = multiForgeTriggerAmount * artisanMultiCounter + 1;
                 }
-                for (int i = 0; i < multiForgeTriggerAmount * artisanMultiCounter; i++)
+                int recursionAmount = multiForgeTriggerAmount * artisanMultiCounter;
+                for (int i = 0; i < recursionAmount; i++)
                 {
 
                     int value = forgeC.GetValue(this);
@@ -544,7 +564,7 @@ public class HomesteadManager : MonoBehaviour
             }
             if (card is Soulbind sb)
             {
-                int value = sb.GetValue(this) - ForgeExpertCounter/2 * 5 + runtimeCard.AddedValue;
+                int value = sb.GetValue(this) + runtimeCard.AddedValue;
                     //Debug.Log("Soulbinding " + SoulbindMultiforge + "  value: " + value);
                 for (int i = 0; i < SoulbindMultiforge; i++)
                 {
@@ -650,7 +670,12 @@ public class HomesteadManager : MonoBehaviour
 
         }
 
-        return leftColour * rightColour;
+        float thirdColour = 1;
+        if (AuroraBlessing.isOn)
+            thirdColour += AuroraBlessingAmount;
+        if (ProductionBooster.isOn)
+            thirdColour += 2;
+        return (int)(leftColour * rightColour * thirdColour);
     }
     
     private void FuseCheck()
@@ -1183,6 +1208,11 @@ public class HomesteadManager : MonoBehaviour
 
     private void ReduceLowestColour(int amount)
     {
+        if (isStellarPotion)
+        {
+            ReduceRandomColour(amount);
+            return;
+        }
         if(didWeReversal)
         {
             IncreaseHighestColour(amount * reversalMultiplier);
@@ -1207,6 +1237,11 @@ public class HomesteadManager : MonoBehaviour
 
     private void ReduceHighestColour(int amount)
     {
+        if (isStellarPotion)
+        {
+            ReduceRandomColour(amount);
+            return;
+        }
         if (isEarthAntidote)
         {
             amount *= 2;
@@ -1230,6 +1265,11 @@ public class HomesteadManager : MonoBehaviour
 
     private void IncreaseLowestColour(int amount)
     {
+        if (isStellarPotion)
+        {
+            IncreaseRandomColour(amount);
+            return;
+        }
         if (overchargeAmount > 0)
         {
             amount *= overchargeMultiplier;
@@ -1259,6 +1299,11 @@ public class HomesteadManager : MonoBehaviour
 
     private void IncreaseLowestLeftColour(int amount)
     {
+        if (isStellarPotion)
+        {
+            IncreaseRandomColour(amount);
+            return;
+        }
         if (overchargeAmount > 0)
         {
             amount *= overchargeMultiplier;
@@ -1280,6 +1325,11 @@ public class HomesteadManager : MonoBehaviour
     }
     private void IncreaseLowestRightColour(int amount)
     {
+        if (isStellarPotion)
+        {
+            IncreaseRandomColour(amount);
+            return;
+        }
         if (overchargeAmount > 0)
         {
             amount *= overchargeMultiplier;
@@ -1302,6 +1352,11 @@ public class HomesteadManager : MonoBehaviour
 
     private void IncreaseHighestColour(int amount)
     {
+        if (isStellarPotion)
+        {
+            IncreaseRandomColour(amount);
+            return;
+        }
         //Exception to overload is at overload section of calculation
         if (isEarthAntidote)
         {
@@ -1319,6 +1374,16 @@ public class HomesteadManager : MonoBehaviour
 
     private void ReduceBothColours(int amount)
     {
+        if (isStellarPotion)
+        {
+            leftColour -= amount;
+            if (leftColour < 1)
+                leftColour = 1;
+            rightColour -= amount;
+            if (rightColour < 1)
+                rightColour = 1;
+            return;
+        }
         if (isEarthAntidote)
         {
             amount *= 2;
@@ -1339,6 +1404,12 @@ public class HomesteadManager : MonoBehaviour
     }
     private void IncreaseBothColours(int amount)
     {
+        if (isStellarPotion)
+        {
+            leftColour += amount;
+            rightColour += amount;
+            return;
+        }
         IncreaseHighestColour(amount);
         IncreaseLowestColour(amount);
     }
@@ -2754,5 +2825,14 @@ public class HomesteadManager : MonoBehaviour
         CalculatingText.SetActive(true);
         Canvas.ForceUpdateCanvases();
         Debug.Log("Calculating");
+    }
+
+    public void OnAuroraChange()
+    {
+        string value = AuroraBlessing.transform.GetChild(2).GetComponent<TMP_InputField>().text;
+        if (value != null)
+        {
+            AuroraBlessingAmount = int.Parse(value)/100.0f;
+        }
     }
 }

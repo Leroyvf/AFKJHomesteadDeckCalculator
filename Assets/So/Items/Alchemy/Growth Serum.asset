@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Growth Serum
   OneStarScore: 12
-  TwoStarScore: 27
+  TwoStarScore: 32
   ThreeStarScore: 1000000
   FourStarScore: 10000000
   DeckSize: 3

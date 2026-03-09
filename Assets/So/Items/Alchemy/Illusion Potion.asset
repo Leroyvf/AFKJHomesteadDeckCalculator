@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Illusion Potion
   m_EditorClassIdentifier: 
   Name: Illusion Potion
-  OneStarScore: 2990
-  TwoStarScore: 3260
-  ThreeStarScore: 3510
-  FourStarScore: 4070
+  OneStarScore: 2220
+  TwoStarScore: 3300
+  ThreeStarScore: 4700
+  FourStarScore: 5570
   DeckSize: 8
   ZeroStarWP: 439
-  OneStarWP: 5049
+  OneStarWP: 549
   TwoStarWP: 604
   ThreeStarWP: 687
   FourStarWP: 851

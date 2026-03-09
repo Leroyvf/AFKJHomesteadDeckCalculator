@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Flat Bread
   m_EditorClassIdentifier: 
   Name: Flat Bread
-  OneStarScore: 15
-  TwoStarScore: 25
+  OneStarScore: 25
+  TwoStarScore: 60
   ThreeStarScore: 10000000
   FourStarScore: 10000000
   DeckSize: 4

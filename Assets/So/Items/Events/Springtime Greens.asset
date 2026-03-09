@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2cbb465f1adc9dd42ae651aab2d0d7d6, type: 3}
-  m_Name: Wooden Arrow
-  m_EditorClassIdentifier: 
-  Name: Wooden Arrow
-  OneStarScore: 108
-  TwoStarScore: 130
-  ThreeStarScore: 163
-  FourStarScore: 10000000
-  DeckSize: 5
-  ZeroStarWP: 96
-  OneStarWP: 120
-  TwoStarWP: 138
-  ThreeStarWP: 169
-  FourStarWP: 0
+  m_Name: Springtime Greens
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  Name: Springtime Greens
+  OneStarScore: 10327
+  TwoStarScore: 32724
+  ThreeStarScore: 74529
+  FourStarScore: 106929
+  DeckSize: 6
+  ZeroStarWP: 600
+  OneStarWP: 800
+  TwoStarWP: 900
+  ThreeStarWP: 1000
+  FourStarWP: 1100

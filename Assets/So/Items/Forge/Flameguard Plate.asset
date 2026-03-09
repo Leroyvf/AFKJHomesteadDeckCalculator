@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Flameguard Plate
   m_EditorClassIdentifier: 
   Name: Flameguard Plate
-  OneStarScore: 5910
-  TwoStarScore: 19200
-  ThreeStarScore: 29900
-  FourStarScore: 48600
+  OneStarScore: 3480
+  TwoStarScore: 10500
+  ThreeStarScore: 20530
+  FourStarScore: 44500
   DeckSize: 8
   ZeroStarWP: 439
-  OneStarWP: 5049
+  OneStarWP: 549
   TwoStarWP: 604
   ThreeStarWP: 687
   FourStarWP: 851

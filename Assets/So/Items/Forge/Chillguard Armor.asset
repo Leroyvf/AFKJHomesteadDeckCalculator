@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Chillguard Armor
   m_EditorClassIdentifier: 
   Name: Chillguard Armor
-  OneStarScore: 762
-  TwoStarScore: 873
-  ThreeStarScore: 974
-  FourStarScore: 1190
+  OneStarScore: 220
+  TwoStarScore: 550
+  ThreeStarScore: 750
+  FourStarScore: 1075
   DeckSize: 6
-  ZeroStarWP: 384
-  OneStarWP: 480
-  TwoStarWP: 528
-  ThreeStarWP: 600
-  FourStarWP: 744
+  ZeroStarWP: 192
+  OneStarWP: 240
+  TwoStarWP: 264
+  ThreeStarWP: 300
+  FourStarWP: 372

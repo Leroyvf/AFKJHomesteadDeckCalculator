@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Firefang Sword
   OneStarScore: 6940
-  TwoStarScore: 28900
-  ThreeStarScore: 54500
-  FourStarScore: 92100
+  TwoStarScore: 22800
+  ThreeStarScore: 49945
+  FourStarScore: 77000
   DeckSize: 8
   ZeroStarWP: 560
   OneStarWP: 700

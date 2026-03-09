@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Calming Bouquet
   m_EditorClassIdentifier: 
   Name: Calming Bouquet
-  OneStarScore: 518
-  TwoStarScore: 575
-  ThreeStarScore: 637
-  FourStarScore: 744
+  OneStarScore: 240
+  TwoStarScore: 340
+  ThreeStarScore: 460
+  FourStarScore: 650
   DeckSize: 6
-  ZeroStarWP: 384
-  OneStarWP: 480
-  TwoStarWP: 528
-  ThreeStarWP: 600
-  FourStarWP: 744
+  ZeroStarWP: 192
+  OneStarWP: 240
+  TwoStarWP: 264
+  ThreeStarWP: 300
+  FourStarWP: 372

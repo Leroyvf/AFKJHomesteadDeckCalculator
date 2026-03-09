@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Salted Corn Chips
   m_EditorClassIdentifier: 
   Name: Salted Corn Chips
-  OneStarScore: 2570
-  TwoStarScore: 3100
-  ThreeStarScore: 3670
-  FourStarScore: 5290
+  OneStarScore: 1810
+  TwoStarScore: 4620
+  ThreeStarScore: 7380
+  FourStarScore: 12300
   DeckSize: 5
   ZeroStarWP: 704
   OneStarWP: 880

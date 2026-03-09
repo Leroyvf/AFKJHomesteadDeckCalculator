@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Toast
   m_EditorClassIdentifier: 
   Name: Toast
-  OneStarScore: 102
-  TwoStarScore: 159
+  OneStarScore: 70
+  TwoStarScore: 160
   ThreeStarScore: 10000000
   FourStarScore: 10000000
   DeckSize: 5
-  ZeroStarWP: 125
-  OneStarWP: 156
-  TwoStarWP: 203
+  ZeroStarWP: 83
+  OneStarWP: 104
+  TwoStarWP: 135
   ThreeStarWP: 0
   FourStarWP: 0

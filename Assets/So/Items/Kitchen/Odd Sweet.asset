@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Odd Sweet
   m_EditorClassIdentifier: 
   Name: Odd Sweat
-  OneStarScore: 15900
-  TwoStarScore: 18500
-  ThreeStarScore: 22000
-  FourStarScore: 30900
+  OneStarScore: 6600
+  TwoStarScore: 13110
+  ThreeStarScore: 20050
+  FourStarScore: 32900
   DeckSize: 8
   ZeroStarWP: 560
   OneStarWP: 700

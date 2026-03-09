@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Pinkroot Stew
   m_EditorClassIdentifier: 
   Name: Pinkroot Stew
-  OneStarScore: 10300
-  TwoStarScore: 12600
-  ThreeStarScore: 14300
-  FourStarScore: 20800
+  OneStarScore: 3530
+  TwoStarScore: 7650
+  ThreeStarScore: 11440
+  FourStarScore: 20700
   DeckSize: 7
   ZeroStarWP: 439
-  OneStarWP: 5049
+  OneStarWP: 549
   TwoStarWP: 604
   ThreeStarWP: 687
   FourStarWP: 851

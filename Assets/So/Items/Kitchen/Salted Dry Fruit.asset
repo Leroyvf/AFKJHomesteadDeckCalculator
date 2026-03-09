@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Salted Dry Fruit
   m_EditorClassIdentifier: 
   Name: Salted Dry Fruit
-  OneStarScore: 1040
-  TwoStarScore: 1230
-  ThreeStarScore: 1350
-  FourStarScore: 1640
+  OneStarScore: 350
+  TwoStarScore: 675
+  ThreeStarScore: 1015
+  FourStarScore: 1715
   DeckSize: 5
-  ZeroStarWP: 384
-  OneStarWP: 480
-  TwoStarWP: 528
-  ThreeStarWP: 600
-  FourStarWP: 744
+  ZeroStarWP: 192
+  OneStarWP: 240
+  TwoStarWP: 264
+  ThreeStarWP: 300
+  FourStarWP: 372

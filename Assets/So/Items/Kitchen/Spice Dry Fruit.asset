@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Spice Dry Fruit
   m_EditorClassIdentifier: 
   Name: Spice Dry Fruit
-  OneStarScore: 2670
-  TwoStarScore: 2950
-  ThreeStarScore: 3340
-  FourStarScore: 4020
+  OneStarScore: 810
+  TwoStarScore: 1375
+  ThreeStarScore: 1980
+  FourStarScore: 3480
   DeckSize: 7
-  ZeroStarWP: 384
-  OneStarWP: 480
-  TwoStarWP: 528
-  ThreeStarWP: 600
-  FourStarWP: 744
+  ZeroStarWP: 192
+  OneStarWP: 240
+  TwoStarWP: 264
+  ThreeStarWP: 300
+  FourStarWP: 372

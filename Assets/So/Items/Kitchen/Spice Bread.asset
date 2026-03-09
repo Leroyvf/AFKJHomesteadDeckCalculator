@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Spice Bread
   m_EditorClassIdentifier: 
   Name: Spice Bread
-  OneStarScore: 372
-  TwoStarScore: 448
-  ThreeStarScore: 635
+  OneStarScore: 112
+  TwoStarScore: 255
+  ThreeStarScore: 560
   FourStarScore: 10000000
   DeckSize: 5
-  ZeroStarWP: 192
-  OneStarWP: 240
-  TwoStarWP: 276
-  ThreeStarWP: 338
+  ZeroStarWP: 96
+  OneStarWP: 120
+  TwoStarWP: 138
+  ThreeStarWP: 169
   FourStarWP: 0

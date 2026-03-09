@@ -301,13 +301,13 @@ public class UI_CardAdjuster : MonoBehaviour
             case 0:
                 Pyroburst.StartValue = 12;
                 Pyroburst.baseValue = 12;
-                Pyroburst.triggeramount = 1;
+                Pyroburst.triggeramount = 2;
                 Pyroburst.buffrequirement = 2;
                 break;
             case 1:
                 Pyroburst.StartValue = 18;
                 Pyroburst.baseValue = 18;
-                Pyroburst.triggeramount = 1;
+                Pyroburst.triggeramount = 2;
                 Pyroburst.buffrequirement = 2;
                 break;
 
@@ -505,15 +505,15 @@ public class UI_CardAdjuster : MonoBehaviour
         switch (GrindDropdown.options.Count - GrindDropdown.value - 1)
         {
             case 0:
-                Grind.StartValue = 2;
-                Grind.negativeValue = 0;
-                break;
-            case 1:
                 Grind.StartValue = 3;
                 Grind.negativeValue = 0;
                 break;
-            case 2:
+            case 1:
                 Grind.StartValue = 4;
+                Grind.negativeValue = 0;
+                break;
+            case 2:
+                Grind.StartValue = 6;
                 Grind.negativeValue = 2;
                 break;
             case 3:
@@ -598,12 +598,12 @@ public class UI_CardAdjuster : MonoBehaviour
         switch (EnchantDropdown.options.Count - EnchantDropdown.value - 1)
         {
             case 0:
-                Enchant.StartValue = 8;
+                Enchant.StartValue = 12;
                 Enchant.bonusValue = 1;
                 Enchant.isLevelTwo = false;
                 break;
             case 1:
-                Enchant.StartValue = 16;
+                Enchant.StartValue = 20;
                 Enchant.bonusValue = 1;
                 Enchant.isLevelTwo = true;
                 break;

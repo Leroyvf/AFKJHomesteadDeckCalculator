@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Calmwind Incense
   m_EditorClassIdentifier: 
   Name: Calmwind Incense
-  OneStarScore: 2070
-  TwoStarScore: 2340
-  ThreeStarScore: 2670
-  FourStarScore: 3420
+  OneStarScore: 700
+  TwoStarScore: 1890
+  ThreeStarScore: 2470
+  FourStarScore: 3720
   DeckSize: 6
   ZeroStarWP: 339
   OneStarWP: 424

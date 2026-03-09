@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Dried Mushroom
   m_EditorClassIdentifier: 
   Name: Dried Mushroom
-  OneStarScore: 2730
-  TwoStarScore: 3150
-  ThreeStarScore: 4460
+  OneStarScore: 675
+  TwoStarScore: 1520
+  ThreeStarScore: 2560
   FourStarScore: 5260
   DeckSize: 5
   ZeroStarWP: 339

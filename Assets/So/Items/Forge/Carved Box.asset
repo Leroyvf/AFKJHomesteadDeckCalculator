@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Carved Box
   m_EditorClassIdentifier: 
   Name: Carved Box
-  OneStarScore: 152
-  TwoStarScore: 180
-  ThreeStarScore: 182
-  FourStarScore: 190
+  OneStarScore: 100
+  TwoStarScore: 133
+  ThreeStarScore: 180
+  FourStarScore: 261
   DeckSize: 4
-  ZeroStarWP: 280
-  OneStarWP: 350
-  TwoStarWP: 385
-  ThreeStarWP: 438
-  FourStarWP: 543
+  ZeroStarWP: 140
+  OneStarWP: 175
+  TwoStarWP: 193
+  ThreeStarWP: 219
+  FourStarWP: 271

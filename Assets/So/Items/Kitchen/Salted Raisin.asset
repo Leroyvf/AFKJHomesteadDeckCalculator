@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Salted Raisin
   m_EditorClassIdentifier: 
   Name: Salted Raisin
-  OneStarScore: 344
-  TwoStarScore: 440
-  ThreeStarScore: 462
-  FourStarScore: 647
+  OneStarScore: 117
+  TwoStarScore: 170
+  ThreeStarScore: 289
+  FourStarScore: 525
   DeckSize: 4
-  ZeroStarWP: 280
-  OneStarWP: 350
-  TwoStarWP: 385
-  ThreeStarWP: 438
-  FourStarWP: 543
+  ZeroStarWP: 140
+  OneStarWP: 175
+  TwoStarWP: 193
+  ThreeStarWP: 219
+  FourStarWP: 271

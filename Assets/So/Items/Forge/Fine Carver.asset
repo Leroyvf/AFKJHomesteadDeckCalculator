@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Fine Carver
   m_EditorClassIdentifier: 
   Name: Fine Carver
-  OneStarScore: 46
-  TwoStarScore: 86
+  OneStarScore: 32
+  TwoStarScore: 100
   ThreeStarScore: 10000000
   FourStarScore: 10000000
   DeckSize: 5
-  ZeroStarWP: 125
-  OneStarWP: 156
-  TwoStarWP: 203
+  ZeroStarWP: 83
+  OneStarWP: 104
+  TwoStarWP: 135
   ThreeStarWP: 0
   FourStarWP: 0
