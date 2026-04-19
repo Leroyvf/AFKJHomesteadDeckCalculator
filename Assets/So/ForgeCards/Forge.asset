@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33563a2e1f4ff484ebe31d3f4a00d87e, type: 3}
   m_Name: Forge
   m_EditorClassIdentifier: 
-  StartValue: 5
+  StartValue: 20
   AddedValue: 0
   bonusValue: 0
   CardAmounts: 0200000002000000020000000300000003000000030000000300000003000000030000000300000003000000030000000300000003000000030000000300000003000000030000000300000003000000
   isArtisan: 1
+  isStartArtisan: 1
+  baseValue: 20

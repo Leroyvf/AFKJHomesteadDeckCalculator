@@ -17,9 +17,9 @@ MonoBehaviour:
   TwoStarScore: 32724
   ThreeStarScore: 74529
   FourStarScore: 106929
-  DeckSize: 6
+  DeckSize: 7
   ZeroStarWP: 600
   OneStarWP: 800
   TwoStarWP: 900
   ThreeStarWP: 1000
-  FourStarWP: 1100
+  FourStarWP: 1200

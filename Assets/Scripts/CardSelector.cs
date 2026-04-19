@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
@@ -118,32 +120,49 @@ public class CardSelector : MonoBehaviour
                 AlchemyDropDown.value = card;
                 break;
             case 3:
-                switch (HomesteadManager.Instance.itemAdjuster.GetCurrentItemIndex())
+
+                if (HomesteadManager.Instance.itemAdjuster.GetCurrentItem() is EventItem eventItem)
                 {
-                    case 0: //SpringtimeGreens
-                        KitchenDropDown.gameObject.SetActive(true);
-                        ForgeDropDown.gameObject.SetActive(false);
-                        AlchemyDropDown.gameObject.SetActive(false);
-                        KitchenDropDown.value = card;
-                        break;
-                    case 1: //FestivalFigurine
-                        KitchenDropDown.gameObject.SetActive(false);
-                        ForgeDropDown.gameObject.SetActive(true);
-                        AlchemyDropDown.gameObject.SetActive(false);
-                        ForgeDropDown.value = card;
-                        break;
-                    case 2: //StellarPotion
-                        KitchenDropDown.gameObject.SetActive(false);
-                        ForgeDropDown.gameObject.SetActive(false);
-                        AlchemyDropDown.gameObject.SetActive(true);
-                        AlchemyDropDown.value = card;
-                        break;
-                    case 3: //LunarPastryBox
-                        KitchenDropDown.gameObject.SetActive(true);
-                        ForgeDropDown.gameObject.SetActive(false);
-                        AlchemyDropDown.gameObject.SetActive(false);
-                        KitchenDropDown.value = card;
-                        break;
+                    EventDropDown.gameObject.SetActive(true);
+                    EventDropDown.ClearOptions();
+                    List<string> dropDownOptions = new();
+                    for (int i = 0; i < eventItem.EventCards.Count; i++)
+                    {
+                        dropDownOptions.Add(eventItem.EventCards[i].name);
+                    }
+                    EventDropDown.AddOptions(dropDownOptions);
+                }
+                else
+                {
+
+
+                    switch (HomesteadManager.Instance.itemAdjuster.GetCurrentItemIndex())
+                    {
+                        case 0: //SpringtimeGreens
+                            KitchenDropDown.gameObject.SetActive(true);
+                            ForgeDropDown.gameObject.SetActive(false);
+                            AlchemyDropDown.gameObject.SetActive(false);
+                            KitchenDropDown.value = card;
+                            break;
+                        case 1: //FestivalFigurine
+                            KitchenDropDown.gameObject.SetActive(false);
+                            ForgeDropDown.gameObject.SetActive(true);
+                            AlchemyDropDown.gameObject.SetActive(false);
+                            ForgeDropDown.value = card;
+                            break;
+                        case 2: //StellarPotion
+                            KitchenDropDown.gameObject.SetActive(false);
+                            ForgeDropDown.gameObject.SetActive(false);
+                            AlchemyDropDown.gameObject.SetActive(true);
+                            AlchemyDropDown.value = card;
+                            break;
+                        case 3: //LunarPastryBox
+                            KitchenDropDown.gameObject.SetActive(true);
+                            ForgeDropDown.gameObject.SetActive(false);
+                            AlchemyDropDown.gameObject.SetActive(false);
+                            KitchenDropDown.value = card;
+                            break;
+                    }
                 }
                 break;
         }

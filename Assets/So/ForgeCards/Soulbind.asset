@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe7c62d06855e042b3ded5390516f82, type: 3}
   m_Name: Soulbind
   m_EditorClassIdentifier: 
-  StartValue: 0
+  StartValue: 5
   AddedValue: 0
   bonusValue: 0
   CardAmounts: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000020000000200000002000000020000000200000002000000
   isArtisan: 0
+  isStartArtisan: 0
+  baseValue: 5

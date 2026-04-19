@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31e63f59921584e40b2c55070dd4dc90, type: 3}
   m_Name: ForgeExpert
   m_EditorClassIdentifier: 
-  StartValue: 5
+  StartValue: 10
   AddedValue: 0
-  bonusValue: 4
+  bonusValue: 5
   CardAmounts: 0000000000000000000000000200000003000000040000000400000004000000040000000400000004000000040000000400000004000000040000000400000004000000040000000400000004000000
   isArtisan: 1
-  baseValue: 5
+  isStartArtisan: 1
+  baseValue: 10

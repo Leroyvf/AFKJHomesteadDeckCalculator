@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51ca3cc65c988004382e19b2a300be02, type: 3}
   m_Name: Pyroburst
   m_EditorClassIdentifier: 
-  StartValue: 12
+  StartValue: 18
   AddedValue: 0
   bonusValue: 0
   CardAmounts: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000200000002000000020000000200000002000000020000000200000002000000
   isArtisan: 1
-  baseValue: 12
-  triggeramount: 1
+  isStartArtisan: 1
+  baseValue: 18
+  triggeramount: 2
   buffrequirement: 2

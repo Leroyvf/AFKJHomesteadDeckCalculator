@@ -108,7 +108,7 @@ public class HomesteadManager : MonoBehaviour
 
     public UI_ItemAdjuster itemAdjuster;
     public UI_CardAdjuster cardAjuster;
-    private List<int> resultsList = new();
+    private List<long> resultsList = new();
 
     public Toggle AuroraBlessing;
     public Toggle ProductionBooster;
@@ -163,14 +163,23 @@ public class HomesteadManager : MonoBehaviour
     }
     public void AddValueToFutureArtisanCards(int amount)
     {
-        for (int i = currentRuntimeIndex; i < cards.Count; i++)
+        for (int i = 0; i < cards.Count; i++)
         {
             if (cards[i].Data is ForgeCard specialCard)
             {
-                if (specialCard.isArtisan)
+                if (specialCard.isArtisan || isFestivalFigurine)
+                {
                     cards[i].AddedValue += amount; // Modify Wrapper
-                else if (specialCard is Soulbind sb)
+                    if (specialCard is Reforge rf)
+                    {
+                        //Debug.Log("Reforgering");
+                        ReforgeAdded += amount;
+                    }
+                }
+                if (specialCard is Soulbind sb)
+                {
                     cards[i].AddedValue += amount; // Modify Wrapper
+                }
             }
         }
         HeatUpCounter++;
@@ -271,7 +280,7 @@ public class HomesteadManager : MonoBehaviour
     private bool hasSweetbeanJuiced = false;
     private int cardCounter = 0;
     private bool isTea = false;
-    private int CalculateResults()
+    private long CalculateResults()
     {
         //int result = 0;
         leftColour = 1;
@@ -284,6 +293,7 @@ public class HomesteadManager : MonoBehaviour
 
         ReforgeBonus = 0;
         ReforgeAmount = 0;
+        ReforgeAdded = 0;
 
         SoulbindMultiforge = 0;
 
@@ -365,6 +375,8 @@ public class HomesteadManager : MonoBehaviour
         }
         // -----------------------------------
 
+            string finalDeck = "";
+
         for (int cardInteger = 0; cardInteger < cards.Count; cardInteger++)
         {
 
@@ -385,6 +397,8 @@ public class HomesteadManager : MonoBehaviour
             }
 
             lastCard = card;
+
+            int reforgeTriggersCount = 0;
 
             //ByTheRecipe
             thirdlastCardName = secondlastCardName;
@@ -409,7 +423,7 @@ public class HomesteadManager : MonoBehaviour
                     hasSweetbeanJuiced = true;
             }   
 
-            if(isLightproofBrush && !(card is Reforge) && !(card is Sharpening))
+            if(isLightproofBrush && card is not global::Reforge && card is not Sharpening)
             {
                 if (!seenCardsSet.Contains(runtimeCard.CachedID))
                 {
@@ -422,6 +436,8 @@ public class HomesteadManager : MonoBehaviour
                     {
                         CurrentRoundCalc(card);
                         card.OnActivation(this);
+                        reforgeTriggersCount++;
+                        
                     }
                 }
             }
@@ -444,15 +460,17 @@ public class HomesteadManager : MonoBehaviour
 
                         CurrentRoundCalc(card);
                         card.OnActivation(this);
+                        reforgeTriggersCount++;
                     }
                 }
             }
 
-            if (isArmoredBodysuit && cardCounter < 3 && !(card is Reforge) && !(card is Sharpening))
+            if (isArmoredBodysuit && cardCounter < 3 && card is not global::Reforge && card is not Sharpening)
             {
 
                 CurrentRoundCalc(card);
                 card.OnActivation(this);
+                reforgeTriggersCount++;
                 cardCounter++;
             }
 
@@ -479,6 +497,7 @@ public class HomesteadManager : MonoBehaviour
                     if (itemAdjuster.buggedToggle.isOn)
                         card.StartValue = value;
                     fe.OnActivation(this);
+                    reforgeTriggersCount++;
                 }
             }
 
@@ -503,6 +522,7 @@ public class HomesteadManager : MonoBehaviour
                             card.StartValue = value;
                         }
                         P.OnActivation(this);
+                        reforgeTriggersCount++;
                     }
                     
                 }
@@ -527,7 +547,7 @@ public class HomesteadManager : MonoBehaviour
                         card.StartValue = pvalue;
                     }
                     card.OnActivation(this);
-
+                    reforgeTriggersCount++;
                     /*
                     //second bugged retrigger
                     CurrentRoundCalc(P);
@@ -540,7 +560,7 @@ public class HomesteadManager : MonoBehaviour
                 }
             }
             //Multiforge
-            if (card is ForgeCard forgeC && forgeC.isArtisan && artisanMultiCounter > 0)
+            if (card is ForgeCard forgeC && forgeC.isArtisan && forgeC is not global::Reforge && artisanMultiCounter > 0)
             {
 
                 if (artisanCounter < multiForgeTriggerAmount * artisanMultiCounter && artisanCounter != 0)
@@ -548,6 +568,7 @@ public class HomesteadManager : MonoBehaviour
                     artisanCounter = multiForgeTriggerAmount * artisanMultiCounter + 1;
                 }
                 int recursionAmount = multiForgeTriggerAmount * artisanMultiCounter;
+                artisanMultiCounter = 0;
                 for (int i = 0; i < recursionAmount; i++)
                 {
 
@@ -558,14 +579,16 @@ public class HomesteadManager : MonoBehaviour
                         card.StartValue = value;
                     }
                     forgeC.OnActivation(this);
-
                 }
-                artisanMultiCounter = 0;
+                for (int i = 0;i < recursionAmount; i++)
+                {
+                    reforgeTriggersCount++;
+                }
             }
             if (card is Soulbind sb)
             {
                 int value = sb.GetValue(this) + runtimeCard.AddedValue;
-                    //Debug.Log("Soulbinding " + SoulbindMultiforge + "  value: " + value);
+                //Debug.Log("Soulbinding " + SoulbindMultiforge + "  value: " + value);
                 for (int i = 0; i < SoulbindMultiforge; i++)
                 {
                     if (artisanCounter > 0)
@@ -576,13 +599,20 @@ public class HomesteadManager : MonoBehaviour
                     else
                         IncreaseRandomColour(value);
                     card.OnActivation(this);
+                    reforgeTriggersCount++;
                 }
 
             }
 
             CurrentRoundCalc(card);
             card.OnActivation(this);
-            
+            reforgeTriggersCount++;
+
+            for (int i = 0; i < reforgeTriggersCount; i++)
+            {
+                ReforgeTrigger(card);
+            }
+
             if (isCarvedBox && firstForgeAmount >= 1)
             {
                 hasFirstForgeCardPassed = true;
@@ -601,6 +631,9 @@ public class HomesteadManager : MonoBehaviour
 
             if(overchargeAmount > 0)
                 overchargeAmount--;
+
+            // Debug.Log(card.name + ":  " + leftColour + "  " +  rightColour);
+            finalDeck += card.name + ": " + leftColour + "  " + rightColour + "\n";
         }
         
         if (isDriedMushroom && howManyHeatControls >= 7)
@@ -665,17 +698,26 @@ public class HomesteadManager : MonoBehaviour
 
         if (hasSweetbeanJuiced)
         {
-            Debug.Log("Sweetbean juiced");
+            //Debug.Log("Sweetbean juiced");
             IncreaseBothColours(20);
 
         }
 
-        float thirdColour = 1;
+        double thirdColour = 1;
         if (AuroraBlessing.isOn)
             thirdColour += AuroraBlessingAmount;
         if (ProductionBooster.isOn)
             thirdColour += 2;
-        return (int)(leftColour * rightColour * thirdColour);
+
+        foreach (var c in cards)
+        {
+            c.Data.ResetAddedValue();
+            c.AddedValue = 0;
+        }
+        long result = ((long)leftColour * rightColour);
+        //if (result >= 500000000)
+           // Debug.Log(finalDeck);
+        return (long)(result * thirdColour);
     }
     
     private void FuseCheck()
@@ -772,24 +814,66 @@ public class HomesteadManager : MonoBehaviour
 
     }
     private int ReforgeAmount = 0;
+    private int ReforgeAdded = 0;
     private int ReforgeBonus = 0;
-    public void Reforge(int buffamount)
+    private bool isArtReforge = false; 
+    public void Reforge(int buffamount, bool ReforgeArt)
     {
         ReforgeBonus = buffamount;
         ReforgeAmount += 1;
+        isArtReforge = ReforgeArt;
     }
-    public void ReforgeTrigger()
+    public void Ignite(int amount, bool isArt)
     {
-        for (int i = 0; i < ReforgeAmount; i++)
+        if (isArt && artisanCounter > 0)
         {
-            leftColour += ReforgeBonus;
-            rightColour += ReforgeBonus;   
+            MultiplyHighestColour(amount);
+            MultiplyLowestColour(amount);
+            artisanCounter -= 1;
         }
-        if (isArmoredBodysuit && cardCounter < 3)
+        else
+            MultiplyRandomColour(amount);
+    }
+    public void ReforgeTrigger(Card c)
+    {
+            //Debug.Log("reforge " + c.name);
+        if (c is ForgeCard reforgeCheck && reforgeCheck.isArtisan && c is not global::Reforge && ReforgeAmount > 0)
         {
-            leftColour += ReforgeBonus;
-            rightColour += ReforgeBonus;
-            cardCounter++;
+            int value = ReforgeAdded + ReforgeBonus;
+            //Debug.Log("Success " + value);  
+            if (isArtReforge && artisanMultiCounter > 0)
+            {
+                int recursionAmount = multiForgeTriggerAmount * artisanMultiCounter;
+
+                for (int i = 0; i < recursionAmount; i++)
+                {
+              //      Debug.Log("recursion " + c.name);
+                    for (int j = 0; j < ReforgeAmount; j++)
+                    {
+                        leftColour += value;
+                        rightColour += value;
+                    }
+                    if (isArmoredBodysuit && cardCounter < 3)
+                    {
+                        leftColour += value;
+                        rightColour += value;
+                        cardCounter++;
+                    }
+                }
+                artisanMultiCounter = 0;
+            }
+
+            for (int i = 0; i < ReforgeAmount; i++)
+            {
+                leftColour += value;
+                rightColour += value;
+            }
+            if (isArmoredBodysuit && cardCounter < 3)
+            {
+                leftColour += value;
+                rightColour += value;
+                cardCounter++;
+            }
         }
     }
     private int sharpenValue = 0;
@@ -999,9 +1083,7 @@ public class HomesteadManager : MonoBehaviour
     public void CurrentRoundCalc(Card c)
     {
         int addedvaluestored = cards[currentRuntimeIndex].AddedValue;
-        //Reforge
-        if (c is ForgeCard reforgeCheck && reforgeCheck.isArtisan)
-            ReforgeTrigger();
+        
         //Sharpen
         if (c is ForgeCard && !seenCardsSet.Contains(cards[currentRuntimeIndex].CachedID))
         {
@@ -1013,7 +1095,9 @@ public class HomesteadManager : MonoBehaviour
         }
         if (c is ForgeCard fc && (fc.isArtisan) && artisanCounter > 0)
         {
-            int value = fc.GetValue(this) + addedvaluestored;
+
+            int value = fc.GetValue(this);
+            if (value > 0) value += addedvaluestored;
             leftColour += value;
             rightColour += value;
             artisanCounter--;
@@ -1032,6 +1116,7 @@ public class HomesteadManager : MonoBehaviour
         }
         else if (c is Soulbind sb)
         {
+            //Debug.Log("Soulbind");
             int value = sb.GetValue(this) + addedvaluestored;
             if (artisanCounter > 0)
             {
@@ -1167,16 +1252,18 @@ public class HomesteadManager : MonoBehaviour
         }
         else
         {
-            int value = c.GetValue(this) + addedvaluestored;
+            int value = c.GetValue(this);
+            if (value > 0) value += addedvaluestored;
             IncreaseRandomColour(value);
         }
         if (!(c is Cut))
         {
             cutCounter = 0;
         }
-
+        //Reforge
+        
         //if (c is ForgeCard fCard && fCard.isArtisan)
-          // ReforgeTrigger();
+        // ReforgeTrigger();
     }
 
     private void IncreaseRandomColour(int amount)
@@ -1466,9 +1553,9 @@ public class HomesteadManager : MonoBehaviour
         double stdDev = System.Math.Sqrt(variance);
         StandardDeviation.text = "The standard deviation is: " + stdDev;
 
-        float minresult = resultsList.Min();
+        long minresult = resultsList.Min();
         MinText.text = "The lowest amount is: " + minresult;
-        float maxresult = resultsList.Max();
+        long maxresult = resultsList.Max();
         MaximumText.text = "The highest amount is: " + maxresult;
 
 
@@ -1569,9 +1656,14 @@ public class HomesteadManager : MonoBehaviour
                 }
                 break;
             case 3:
-                for (int i = 0; i < ActivePanel.cardSelectors.Count; i++)
+
+                if (itemAdjuster.GetCurrentItem() is EventItem eventItem)
                 {
-                    cards.Add(new RuntimeCard(EventCards[ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()]));
+                    for (int i = 0; i < ActivePanel.cardSelectors.Count; i++)
+                    {
+                        cards.Add(new RuntimeCard(eventItem.EventCards[ActivePanel.cardSelectors[i].GetCurrentSelectedCardIndex()]));
+
+                    }
                 }
                 break;
         }
@@ -1899,7 +1991,7 @@ public class HomesteadManager : MonoBehaviour
 
             for (int j = 0; j < OptimizationIterationCount; j++)
             {
-                int res = CalculateResults();
+                long res = CalculateResults();
                 if (res < fourStarCutoff)
                 {
                     if (res < threeStarCutoff)
@@ -1983,7 +2075,7 @@ public class HomesteadManager : MonoBehaviour
 
             for (int j = 0; j < iterationSlider.value; j++)
             {
-                int res = CalculateResults();
+                long res = CalculateResults();
                 if (res < fourStarCutoff)
                 {
                     if (res < threeStarCutoff)

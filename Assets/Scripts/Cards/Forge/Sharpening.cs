@@ -4,6 +4,10 @@ using UnityEngine;
 public class Sharpening : ForgeCard
 {
     public int sharpenAmount = 10;
+    public override int GetValue(HomesteadManager manager)
+    {
+        return 0;
+    }
     public override void OnActivation(HomesteadManager manager)
     {
         manager.Sharpen(sharpenAmount);

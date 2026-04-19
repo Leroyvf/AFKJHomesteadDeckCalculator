@@ -242,11 +242,11 @@ public class UI_CardAdjuster : MonoBehaviour
                 break;
             case 2:
                 Charge.StartValue = 0;
-                Charge.ChargeAmount = 100;
+                Charge.ChargeAmount = 1000;
                 break;
             case 3:
                 Charge.StartValue = 5;
-                Charge.ChargeAmount = 100;
+                Charge.ChargeAmount = 1000;
                 break;
         }
     }

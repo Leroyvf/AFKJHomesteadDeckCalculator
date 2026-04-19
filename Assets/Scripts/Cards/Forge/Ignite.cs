@@ -5,9 +5,13 @@ public class Ignite : ForgeCard
 {
     public int multiplicationAmount = 1;
 
-
+    public override int GetValue(HomesteadManager manager)
+    {
+        return 0;
+    }
     public override void OnActivation(HomesteadManager manager)
     {
-        manager.MultiplyRandomColour(multiplicationAmount);
+        manager.Ignite(multiplicationAmount, isArtisan);
+        
     }
 }

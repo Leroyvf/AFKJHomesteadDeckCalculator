@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ee57c3285476e94794448a0cabf3834, type: 3}
   m_Name: Charge
   m_EditorClassIdentifier: 
-  StartValue: 0
+  StartValue: 5
   AddedValue: 0
   bonusValue: 0
   CardAmounts: 0000000000000000000000000000000001000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000
   isArtisan: 0
-  ChargeAmount: 100
+  isStartArtisan: 0
+  ChargeAmount: 1000
